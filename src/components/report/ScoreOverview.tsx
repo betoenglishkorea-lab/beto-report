@@ -1,5 +1,3 @@
-import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 interface ScoreOverviewProps {
@@ -8,9 +6,9 @@ interface ScoreOverviewProps {
   core_goal?: string;
 
   // Vocab
-  vocab_score?: number;
-  vocab_total?: number;
-  vocab_percent?: number;
+  vocab_score?: number | string;
+  vocab_total?: number | string;
+  vocab_percent?: number | string;
   vocab_comment?: string;
   vocab_book?: string;
 
@@ -25,17 +23,17 @@ interface ScoreOverviewProps {
   grammar_scope?: string;
 
   // Chart Data
-  reading_student?: number;
-  reading_average?: number;
-  reading_top30?: number;
+  reading_student?: number | string;
+  reading_average?: number | string;
+  reading_top30?: number | string;
   
-  grammar_student?: number;
-  grammar_average?: number;
-  grammar_top30?: number;
+  grammar_student?: number | string;
+  grammar_average?: number | string;
+  grammar_top30?: number | string;
   
-  total_student?: number;
-  total_average?: number;
-  total_top30?: number;
+  total_student?: number | string;
+  total_average?: number | string;
+  total_top30?: number | string;
 }
 
 export const ScoreOverview = ({
@@ -69,10 +67,20 @@ export const ScoreOverview = ({
   total_top30 = 0
 }: ScoreOverviewProps) => {
 
+  // 1. 데이터 숫자 변환 (DB에서 문자열로 올 경우 대비)
+  const vScore = Number(vocab_score) || 0;
+  const vTotal = Number(vocab_total) || 600;
+
+  // 2. 어휘 그래프 퍼센트 직접 계산 (DB의 vocab_percent 값 무시하고 정확하게 계산)
+  const calculatedVocabPercent = vTotal > 0 
+    ? Math.min(100, Math.max(0, (vScore / vTotal) * 100)) 
+    : 0;
+
+  // 3. 차트 데이터도 숫자로 안전하게 변환
   const chartData = [
-    { name: 'Reading', student: reading_student, average: reading_average, top30: reading_top30 },
-    { name: 'Grammar', student: grammar_student, average: grammar_average, top30: grammar_top30 },
-    { name: 'Total', student: total_student, average: total_average, top30: total_top30 },
+    { name: 'Reading', student: Number(reading_student), average: Number(reading_average), top30: Number(reading_top30) },
+    { name: 'Grammar', student: Number(grammar_student), average: Number(grammar_average), top30: Number(grammar_top30) },
+    { name: 'Total', student: Number(total_student), average: Number(total_average), top30: Number(total_top30) },
   ];
 
   const CustomTooltip = ({ active, payload, label }: any) => {
@@ -127,16 +135,17 @@ export const ScoreOverview = ({
               {/* Progress Section */}
               <div className="bg-gray-50 rounded-lg p-3 md:p-4 mt-1">
                 <div className="flex justify-between items-end mb-2">
-                  <span className="text-xs md:text-sm font-medium text-gray-600">주제별 초등 필수 600단어</span>
+                  <span className="text-xs md:text-sm font-medium text-gray-600">주제별 초등 필수 {vTotal}단어</span>
                   <div className="text-right">
-                    <span className="text-xl md:text-2xl font-bold text-green-700">{vocab_score}</span>
-                    <span className="text-xs md:text-sm text-gray-400 ml-1">/ {vocab_total}</span>
+                    <span className="text-xl md:text-2xl font-bold text-green-700">{vScore}</span>
+                    <span className="text-xs md:text-sm text-gray-400 ml-1">/ {vTotal}</span>
                   </div>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
                   <div 
                     className="bg-green-600 h-2.5 rounded-full transition-all duration-1000" 
-                    style={{ width: `${vocab_percent}%` }}
+                    // 수정됨: 계산된 퍼센트를 적용
+                    style={{ width: `${calculatedVocabPercent}%` }}
                   ></div>
                 </div>
                 <p className="text-xs text-gray-400 mt-2 text-right">
