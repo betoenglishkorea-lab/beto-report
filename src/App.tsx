@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 
-// 기존 컴포넌트들 (그대로 유지)
+// 디자인된 로그인 컴포넌트 import
+import { Login } from "./components/Login";
+
+// 기존 레포트 컴포넌트들
 import { Header } from "./components/report/Header";
 import { StudentProfile } from "./components/report/StudentProfile";
 import { ScoreOverview } from "./components/report/ScoreOverview";
@@ -12,7 +15,7 @@ import {
   publicAnonKey,
 } from "./utils/supabase/info";
 
-// 1. Supabase 클라이언트 설정 (직접 연결)
+// 1. Supabase 클라이언트 설정
 const supabaseUrl = `https://${projectId}.supabase.co`;
 const supabaseKey = publicAnonKey;
 const supabase = createClient(supabaseUrl, supabaseKey);
@@ -22,15 +25,15 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   
-  // 비밀번호 관련 상태
+  // 로그인 상태 관리
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [inputPassword, setInputPassword] = useState("");
 
+  // 2. 데이터 불러오기
   useEffect(() => {
     const fetchData = async () => {
       try {
         const urlParams = new URLSearchParams(window.location.search);
-        const id = urlParams.get("id"); // URL의 ?id= 값
+        const id = urlParams.get("id");
 
         if (!id) {
           setError("잘못된 접근입니다. (ID가 없습니다)");
@@ -38,9 +41,8 @@ export default function App() {
           return;
         }
 
-        // 2. Supabase DB에서 직접 데이터 조회
         const { data: result, error: dbError } = await supabase
-          .from("kv_store_41d28b0a") // 테이블 이름
+          .from("kv_store_41d28b0a")
           .select("value")
           .eq("key", id)
           .single();
@@ -49,7 +51,7 @@ export default function App() {
           console.error("DB Error:", dbError);
           setError("레포트를 찾을 수 없습니다.");
         } else {
-          setData(result.value); // JSON 데이터 저장
+          setData(result.value);
         }
       } catch (err) {
         console.error("Fetch Error:", err);
@@ -62,22 +64,22 @@ export default function App() {
     fetchData();
   }, []);
 
-  // 3. 로그인(비밀번호 검증) 로직
-  const handleLogin = () => {
+  // 3. 비밀번호 검증 로직 (11자리 전체 비교)
+  const handleLogin = (inputPhone: string) => {
     if (!data?.parent_phone) {
-      alert("데이터 오류: 연락처 정보가 없습니다.");
+      alert("데이터 오류: 연락처 정보가 없습니다. 학원에 문의해주세요.");
       return;
     }
 
-    // 전화번호에서 숫자만 추출 후 뒤 4자리 비교
-    const phoneDigits = data.parent_phone.replace(/[^0-9]/g, ""); 
-    const correctPassword = phoneDigits.slice(-4); 
-
-    if (inputPassword === correctPassword) {
-      setIsLoggedIn(true);
+    // DB에 저장된 번호에서 하이픈(-) 제거하고 숫자만 남김
+    // 예: "010-9397-0823" -> "01093970823"
+    const dbPhoneClean = data.parent_phone.replace(/[^0-9]/g, "");
+    
+    // Login 컴포넌트에서 넘어온 번호(이미 숫자 11자리)와 비교
+    if (inputPhone === dbPhoneClean) {
+      setIsLoggedIn(true); // 일치하면 로그인 성공!
     } else {
-      alert("비밀번호가 일치하지 않습니다. (휴대폰 번호 뒤 4자리)");
-      setInputPassword("");
+      alert("입력하신 정보가 등록된 번호와 일치하지 않습니다.");
     }
   };
 
@@ -99,40 +101,12 @@ export default function App() {
     );
   }
 
-  // 4. 로그인 화면 (비밀번호 입력)
+  // 4. 로그인 안 된 상태 -> 피그마 디자인 Login 컴포넌트 보여주기
   if (!isLoggedIn) {
-    return (
-      <div className="fixed inset-0 bg-gray-50 flex items-center justify-center z-50 px-4 font-sans">
-        <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-sm text-center border border-gray-200">
-          <h2 className="text-2xl font-bold mb-2 text-[#5F4B8B]">베토영어 레포트</h2>
-          <p className="text-gray-500 mb-6 text-sm">
-            학생 이름: <span className="font-bold text-black">{data.student_name}</span><br/>
-            학부모님 휴대폰 번호 뒤 4자리를 입력해주세요.
-          </p>
-          
-          <input 
-            type="password" 
-            value={inputPassword}
-            onChange={(e) => setInputPassword(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
-            className="w-full border bg-gray-50 p-4 rounded-xl text-xl text-center mb-4 focus:outline-none focus:ring-2 focus:ring-[#5F4B8B]"
-            placeholder="● ● ● ●"
-            maxLength={4}
-            inputMode="numeric"
-          />
-          
-          <button 
-            onClick={handleLogin}
-            className="w-full bg-[#5F4B8B] text-white py-4 rounded-xl font-bold text-lg hover:bg-[#4A3A6A] transition shadow-md"
-          >
-            확인하기
-          </button>
-        </div>
-      </div>
-    );
+    return <Login onLogin={handleLogin} />;
   }
 
-  // 5. 최종 레포트 화면 (로그인 성공 시)
+  // 5. 로그인 성공 -> 성적표 보여주기
   return (
     <div className="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8 font-sans text-gray-800">
       <div className="max-w-5xl mx-auto bg-white shadow-xl min-h-[1200px] p-4 md:p-12 border-t-8 border-green-800">
