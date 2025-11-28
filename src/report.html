@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BETO 성장 리포트</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .chart-bar {
+            transition: height 1s ease-out;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8 font-sans text-gray-800">
+
+    <div class="max-w-5xl mx-auto bg-white shadow-xl min-h-[1200px] p-4 md:p-12 border-t-8 border-green-800">
+        
+        <!-- Header -->
+        <div class="w-full max-w-5xl mx-auto mb-8">
+            <div class="flex flex-col items-start px-2">
+                <h1 class="text-3xl font-bold text-gray-800 tracking-tight mb-2 flex flex-col md:block">
+                    <span class="text-green-800 md:mr-2">BETO</span>
+                    <span>성장 리포트</span>
+                </h1>
+                <p class="text-gray-500 text-xs">
+                    테스트 일자: 2025년 11월 5회차
+                </p>
+            </div>
+            <div class="w-full h-px bg-gray-200 mt-4"></div>
+        </div>
+
+        <!-- Student Profile -->
+        <div class="w-full max-w-5xl mx-auto mb-10 px-2">
+            <div class="bg-gray-50 rounded-lg border border-gray-200 p-5 grid grid-cols-2 md:grid-cols-4 gap-4 shadow-sm">
+                <!-- School -->
+                <div class="flex flex-col items-center md:items-start md:border-r md:border-gray-300 md:pr-4">
+                    <div class="flex items-center gap-2 mb-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 6 8-4 8 4"/><path d="m18 10 4 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8l4-2"/><path d="M14 22v-4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v4"/><path d="M18 5v17"/><path d="M6 5v17"/></svg>
+                        <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">School</span>
+                    </div>
+                    <span class="text-lg font-bold text-gray-900">서울초등학교</span>
+                </div>
+
+                <!-- Grade -->
+                <div class="flex flex-col items-center md:items-start md:border-r md:border-gray-300 md:px-4">
+                    <div class="flex items-center gap-2 mb-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                        <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Grade</span>
+                    </div>
+                    <span class="text-lg font-bold text-gray-900">4학년</span>
+                </div>
+
+                <!-- Name -->
+                <div class="flex flex-col items-center md:items-start md:border-r md:border-gray-300 md:px-4">
+                     <div class="flex items-center gap-2 mb-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Name</span>
+                    </div>
+                    <span class="text-lg font-bold text-gray-900">최서현</span>
+                </div>
+
+                <!-- Class -->
+                <div class="flex flex-col items-center md:items-start md:pl-4">
+                     <div class="flex items-center gap-2 mb-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                        <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Class</span>
+                    </div>
+                    <span class="text-lg font-bold text-green-700">FLY반</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Score Overview -->
+        <div class="w-full max-w-5xl mx-auto mb-12 px-0 md:px-2">
+            <div class="mb-4 flex w-full justify-center items-center gap-3 border-b-2 border-gray-800 pb-2">
+                <h2 class="text-xl md:text-2xl font-bold text-gray-900">
+                    학년별 핵심 목표
+                </h2>
+                <span class="bg-green-800 text-white px-3 py-0.5 rounded-sm text-xs md:text-sm font-bold">
+                    4학년
+                </span>
+            </div>
+
+            <div class="bg-gradient-to-r from-green-800 to-green-900 p-3 md:p-4 rounded-xl shadow-sm mb-4">
+                <p class="text-white font-bold leading-relaxed text-base md:text-lg text-center">
+                    기초 문장 구조에 익숙해지고,<br /> 초등 필수 단어/단문 이해력 안정시키기
+                </p>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Vocabulary Section -->
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden group hover:border-green-300 transition-colors duration-300">
+                    <div class="p-4 md:p-6">
+                        <div class="flex flex-col gap-4 mb-4">
+                            <div class="flex justify-between items-start">
+                                <div class="flex items-center gap-3">
+                                    <span class="flex items-center justify-center w-8 h-8 rounded-full bg-green-100 text-green-700 font-bold text-xs md:text-sm">
+                                        01
+                                    </span>
+                                    <h3 class="text-lg md:text-xl font-bold text-gray-900">
+                                        어휘 <span class="text-xs md:text-sm font-normal text-gray-400 ml-1">Vocabulary</span>
+                                    </h3>
+                                </div>
+                            </div>
+
+                            <!-- Progress Section -->
+                            <div class="bg-gray-50 rounded-lg p-3 md:p-4 mt-1">
+                                <div class="flex justify-between items-end mb-2">
+                                    <span class="text-xs md:text-sm font-medium text-gray-600">주제별 초등 필수 600단어</span>
+                                    <div class="text-right">
+                                        <span class="text-xl md:text-2xl font-bold text-green-700">72</span>
+                                        <span class="text-xs md:text-sm text-gray-400 ml-1">/ 600</span>
+                                    </div>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
+                                    <div class="bg-green-600 h-2.5 rounded-full transition-all duration-1000" style="width: 12%"></div>
+                                </div>
+                                <p class="text-xs text-gray-400 mt-2 text-right">
+                                    * 어휘 학습량은 학생별 이해도와 학습 속도에 맞춰 최적화된 개별 커리큘럼으로 진행됩니다
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <p class="text-gray-700 mb-6 leading-relaxed pl-2 border-l-2 border-green-100 text-sm md:text-base">
+                            주제별로 초등 필수 어휘를 체계적으로 학습하며 어휘력의 기초를 다집니다
+                        </p>
+
+                        <div class="pt-4 border-t border-gray-100">
+                            <div class="flex items-start gap-3">
+                                <span class="shrink-0 w-1.5 h-1.5 rounded-full bg-indigo-500 mt-1.5"></span>
+                                <span class="shrink-0 text-[10px] md:text-xs font-bold text-gray-500 uppercase tracking-wider mt-0.5">
+                                    교재
+                                </span>
+                                <span class="text-gray-800 font-medium text-xs md:text-sm flex-1">
+                                    Word Master 초등 Complete
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reading Section -->
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden group hover:border-green-300 transition-colors duration-300">
+                    <div class="p-4 md:p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="flex items-center justify-center w-8 h-8 rounded-full bg-green-100 text-green-700 font-bold text-xs md:text-sm">
+                                02
+                            </span>
+                            <h3 class="text-lg md:text-xl font-bold text-gray-900">
+                                독해 <span class="text-xs md:text-sm font-normal text-gray-400 ml-1">Reading</span>
+                            </h3>
+                        </div>
+                        
+                        <p class="text-gray-700 mb-6 leading-relaxed pl-2 border-l-2 border-green-100 text-sm md:text-base">
+                            한 문장을 "끊어 읽기" 할 수 있는 수준 확보 및 긴 문장에서 주어, 동사 찾는 습관을 형성합니다. 초등 교과서 수준의 짧은 정보 글을 읽고 내용을 파악합니다.
+                        </p>
+
+                        <div class="pt-4 border-t border-gray-100 space-y-3">
+                            <div class="flex items-start gap-3">
+                                <span class="shrink-0 w-1.5 h-1.5 rounded-full bg-indigo-500 mt-1.5"></span>
+                                <span class="shrink-0 text-[10px] md:text-xs font-bold text-gray-500 uppercase tracking-wider mt-0.5">
+                                    교재
+                                </span>
+                                <span class="text-gray-800 font-medium text-xs md:text-sm flex-1">
+                                    Subject Link Starter 1 ~ 3
+                                </span>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <span class="shrink-0 w-1.5 h-1.5 rounded-full bg-purple-500 mt-1.5"></span>
+                                <span class="shrink-0 text-[10px] md:text-xs font-bold text-gray-500 uppercase tracking-wider mt-0.5">
+                                    핵심
+                                </span>
+                                <span class="text-gray-800 font-medium text-xs md:text-sm flex-1">
+                                    직독직해 & 구문 분석 → 주어·동사 구분 완성
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Grammar Section -->
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden group hover:border-green-300 transition-colors duration-300">
+                    <div class="p-4 md:p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="flex items-center justify-center w-8 h-8 rounded-full bg-green-100 text-green-700 font-bold text-xs md:text-sm">
+                                03
+                            </span>
+                            <h3 class="text-lg md:text-xl font-bold text-gray-900">
+                                문법 <span class="text-xs md:text-sm font-normal text-gray-400 ml-1">Grammar</span>
+                            </h3>
+                        </div>
+                        
+                        <p class="text-gray-700 mb-6 leading-relaxed pl-2 border-l-2 border-green-100 text-sm md:text-base">
+                            문장의 기본 구조를 익히고 명사와 관사의 이해 및 활용 능력을 기릅니다.
+                        </p>
+
+                        <div class="pt-4 border-t border-gray-100 space-y-3">
+                            <div class="flex items-start gap-3">
+                                <span class="shrink-0 w-1.5 h-1.5 rounded-full bg-indigo-500 mt-1.5"></span>
+                                <span class="shrink-0 text-[10px] md:text-xs font-bold text-gray-500 uppercase tracking-wider mt-0.5">
+                                    교재
+                                </span>
+                                <span class="text-gray-800 font-medium text-xs md:text-sm flex-1">
+                                    Grammar Mento Joy 시리즈
+                                </span>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <span class="shrink-0 w-1.5 h-1.5 rounded-full bg-yellow-500 mt-1.5"></span>
+                                <span class="shrink-0 text-[10px] md:text-xs font-bold text-gray-500 uppercase tracking-wider mt-0.5">
+                                    평가범위
+                                </span>
+                                <span class="text-gray-800 font-medium text-xs md:text-sm flex-1">
+                                    명사, 대명사, 관사
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chart Section -->
+            <div class="mt-12">
+                <div class="mb-4 flex w-full justify-center items-center gap-3 border-b-2 border-gray-800 pb-2">
+                    <h2 class="text-xl md:text-2xl font-bold text-gray-900">
+                        성취도 평가 영역별 결과
+                    </h2>
+                </div>
+                
+                <div class="bg-white p-4 md:p-6 rounded-xl border border-gray-200 shadow-sm">
+                    <!-- Custom HTML Chart -->
+                    <div class="w-full max-w-3xl mx-auto mt-8 mb-4">
+                        <div class="grid grid-cols-3 gap-8 items-end h-64 pb-8 relative">
+                            
+                            <!-- Background Grid Lines -->
+                            <div class="absolute inset-0 flex flex-col justify-between pointer-events-none z-0">
+                                <div class="border-b border-gray-100 w-full h-0"></div>
+                                <div class="border-b border-gray-100 w-full h-0"></div>
+                                <div class="border-b border-gray-100 w-full h-0"></div>
+                                <div class="border-b border-gray-100 w-full h-0"></div>
+                                <div class="border-b border-gray-200 w-full h-0"></div>
+                            </div>
+
+                            <!-- Reading -->
+                            <div class="flex justify-center items-end h-full gap-1 md:gap-2 z-10">
+                                <div class="flex flex-col items-center justify-end h-full gap-2 w-1/3">
+                                    <div class="text-[10px] text-green-700 font-bold">90</div>
+                                    <div class="w-full bg-green-500 rounded-t-sm hover:bg-green-600 transition-all" style="height: 90%"></div>
+                                </div>
+                                <div class="flex flex-col items-center justify-end h-full gap-2 w-1/3">
+                                    <div class="text-[10px] text-gray-400">78</div>
+                                    <div class="w-full bg-gray-200 rounded-t-sm" style="height: 78%"></div>
+                                </div>
+                                <div class="flex flex-col items-center justify-end h-full gap-2 w-1/3">
+                                    <div class="text-[10px] text-gray-600 font-bold">94</div>
+                                    <div class="w-full bg-gray-700 rounded-t-sm" style="height: 94%"></div>
+                                </div>
+                                <div class="absolute bottom-0 translate-y-full pt-2 text-xs md:text-sm font-bold text-gray-700 text-center w-full left-0">Reading</div>
+                            </div>
+
+                            <!-- Grammar -->
+                            <div class="flex justify-center items-end h-full gap-1 md:gap-2 z-10">
+                                <div class="flex flex-col items-center justify-end h-full gap-2 w-1/3">
+                                    <div class="text-[10px] text-green-700 font-bold">85</div>
+                                    <div class="w-full bg-green-500 rounded-t-sm hover:bg-green-600 transition-all" style="height: 85%"></div>
+                                </div>
+                                <div class="flex flex-col items-center justify-end h-full gap-2 w-1/3">
+                                    <div class="text-[10px] text-gray-400">75</div>
+                                    <div class="w-full bg-gray-200 rounded-t-sm" style="height: 75%"></div>
+                                </div>
+                                <div class="flex flex-col items-center justify-end h-full gap-2 w-1/3">
+                                    <div class="text-[10px] text-gray-600 font-bold">90</div>
+                                    <div class="w-full bg-gray-700 rounded-t-sm" style="height: 90%"></div>
+                                </div>
+                                <div class="absolute bottom-0 translate-y-full pt-2 text-xs md:text-sm font-bold text-gray-700 text-center w-full left-0">Grammar</div>
+                            </div>
+
+                            <!-- Total (Scaled down by half to fit or normalize) - Actually just relative bars -->
+                            <!-- Let's assume max score is 200 for total, so percentage is roughly score/2 -->
+                            <div class="flex justify-center items-end h-full gap-1 md:gap-2 z-10">
+                                <div class="flex flex-col items-center justify-end h-full gap-2 w-1/3">
+                                    <div class="text-[10px] text-green-700 font-bold">175</div>
+                                    <div class="w-full bg-green-500 rounded-t-sm hover:bg-green-600 transition-all" style="height: 87.5%"></div>
+                                </div>
+                                <div class="flex flex-col items-center justify-end h-full gap-2 w-1/3">
+                                    <div class="text-[10px] text-gray-400">153</div>
+                                    <div class="w-full bg-gray-200 rounded-t-sm" style="height: 76.5%"></div>
+                                </div>
+                                <div class="flex flex-col items-center justify-end h-full gap-2 w-1/3">
+                                    <div class="text-[10px] text-gray-600 font-bold">184</div>
+                                    <div class="w-full bg-gray-700 rounded-t-sm" style="height: 92%"></div>
+                                </div>
+                                <div class="absolute bottom-0 translate-y-full pt-2 text-xs md:text-sm font-bold text-gray-700 text-center w-full left-0">Total</div>
+                            </div>
+
+                        </div>
+                        
+                        <!-- Legend -->
+                        <div class="flex justify-center gap-4 mt-10">
+                            <div class="flex items-center gap-1">
+                                <div class="w-3 h-3 bg-green-500 rounded-sm"></div>
+                                <span class="text-xs text-gray-600">Student</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <div class="w-3 h-3 bg-gray-200 rounded-sm"></div>
+                                <span class="text-xs text-gray-600">Average</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <div class="w-3 h-3 bg-gray-700 rounded-sm"></div>
+                                <span class="text-xs text-gray-600">Top 30%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Teacher's Message -->
+        <div class="w-full max-w-5xl mx-auto mt-12 mb-8">
+            <div class="bg-white border-2 border-green-100 rounded-xl overflow-hidden shadow-sm mb-8">
+                <!-- Header -->
+                <div class="bg-green-50/50 p-6 border-b border-green-100 flex items-center gap-3">
+                    <div class="p-2 bg-green-100 rounded-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/></svg>
+                    </div>
+                    <h2 class="text-xl md:text-2xl font-bold text-gray-900">
+                        Teacher's Message
+                    </h2>
+                </div>
+
+                <div class="p-6 md:p-8 space-y-6">
+                    <!-- Card 1: Strengths -->
+                    <div class="flex gap-4">
+                        <div class="shrink-0 mt-1">
+                            <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2h0a3.13 3.13 0 0 1 3 3.88Z"/></svg>
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <h3 class="font-bold text-gray-900 text-lg">학생의 강점</h3>
+                            <p class="text-gray-700 leading-relaxed text-sm md:text-base">
+                                수업 태도가 매우 성실하며, 새로운 어휘를 습득하려는 열의가 돋보이는 학생입니다. 
+                                특히 독해 지문을 읽을 때 문맥을 파악하는 직관력이 뛰어나고, 
+                                과제를 꼼꼼하게 수행하는 습관이 잡혀 있어 꾸준한 성장이 기대됩니다.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="h-px bg-gray-100 w-full"></div>
+
+                    <!-- Card 2: Growth Points -->
+                    <div class="flex gap-4">
+                        <div class="shrink-0 mt-1">
+                            <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <h3 class="font-bold text-gray-900 text-lg">성장 포인트</h3>
+                            <p class="text-gray-700 leading-relaxed text-sm md:text-base">
+                                문법 규칙을 실제 문제 풀이에 적용하는 과정에서 다소 어려움을 겪고 있습니다.
+                                복잡한 문장 구조를 분석할 때 실수가 잦은 편이므로, 
+                                개념을 확실히 정리하고 다양한 유형의 문제를 통해 응용력을 기르는 것이 필요합니다.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="h-px bg-gray-100 w-full"></div>
+
+                    <!-- Card 3: Customized Plan -->
+                    <div class="flex gap-4">
+                        <div class="shrink-0 mt-1">
+                            <div class="w-8 h-8 rounded-full bg-green-800 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg>
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <h3 class="font-bold text-gray-900 text-lg">맞춤형 지도 계획</h3>
+                            <p class="text-gray-700 leading-relaxed text-sm md:text-base">
+                                취약한 문법 영역을 보완하기 위해 매주 핵심 개념 정리와 맞춤형 클리닉을 진행하겠습니다.
+                                또한 서술형 평가에 대비하여 문장 구조 분석 훈련을 강화하고, 
+                                자주 틀리는 유형을 오답 노트로 정리하여 실수를 줄여나가도록 지도할 계획입니다.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notice Box -->
+            <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-center mb-8 max-w-2xl mx-auto">
+                <div class="flex flex-col items-center justify-center gap-1">
+                    <h3 class="text-sm font-bold text-gray-700">
+                        📞 성취도 리포트 발송 후<br class="block md:hidden" /> 순차적으로 유선 상담을 진행할 예정입니다
+                    </h3>
+                    <p className="text-gray-500 text-xs">
+                        학생의 학습 상황과 향후 지도 방향에 대해<br class="block md:hidden" /> 자세히 안내드리겠습니다.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Footer Info -->
+            <div class="text-center space-y-1 text-gray-400 text-xs">
+                <p>문의사항이 있으시면 언제든 담당 선생님께 연락 주시기 바랍니다.</p>
+                <p class="font-medium">카카오 채널 : http://pf.kakao.com/_wDypb</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="w-full max-w-5xl mx-auto mt-2 pt-4 border-t border-green-800/10">
+            <div class="flex flex-col items-center gap-1 text-center">
+                <p class="text-green-800 font-bold text-base tracking-tight">
+                    "꿈을 크게 꿔라, 깨져도 그 조각이 크다!"
+                </p>
+                <p class="text-gray-500 font-medium text-xs tracking-wide">
+                    판교영어의 자존심, <span class="text-green-800 font-bold">BETO ENGLISH</span>
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
