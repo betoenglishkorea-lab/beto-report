@@ -11,7 +11,7 @@ export interface Student {
   updated_at: string;
 }
 
-export interface Report {
+export interface ElementaryReport {
   id: string;
   student_id: string;
   report_key: string;
@@ -58,10 +58,14 @@ export interface Report {
   updated_at: string;
 }
 
-// 리포트 + 학생 정보 조인 결과
-export interface ReportWithStudent extends Report {
+// 초등 리포트 + 학생 정보 조인 결과
+export interface ElementaryReportWithStudent extends ElementaryReport {
   students: Student;
 }
+
+// 하위 호환성을 위한 별칭
+export type Report = ElementaryReport;
+export type ReportWithStudent = ElementaryReportWithStudent;
 
 // 화면에서 사용하는 통합 데이터 타입 (기존 JSON 구조와 호환)
 export interface ReportData {
@@ -72,7 +76,7 @@ export interface ReportData {
   class_name: string | null;
   parent_phone: string;
 
-  // 리포트 정보 (reports 테이블)
+  // 리포트 정보 (elementary_reports 테이블)
   test_round: string | null;
   grade_badge: string | null;
   core_goal: string | null;

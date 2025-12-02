@@ -14,8 +14,8 @@ CREATE TABLE IF NOT EXISTS students (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- 2. 리포트 테이블 (시험 회차별 성적)
-CREATE TABLE IF NOT EXISTS reports (
+-- 2. 초등 리포트 테이블 (시험 회차별 성적)
+CREATE TABLE IF NOT EXISTS elementary_reports (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   student_id UUID NOT NULL REFERENCES students(id) ON DELETE CASCADE,
   report_key VARCHAR(100) UNIQUE NOT NULL,  -- URL 파라미터용 (기존 kv_store의 key 역할)
@@ -63,19 +63,19 @@ CREATE TABLE IF NOT EXISTS reports (
 );
 
 -- 인덱스 생성
-CREATE INDEX IF NOT EXISTS idx_reports_student_id ON reports(student_id);
-CREATE INDEX IF NOT EXISTS idx_reports_report_key ON reports(report_key);
+CREATE INDEX IF NOT EXISTS idx_elementary_reports_student_id ON elementary_reports(student_id);
+CREATE INDEX IF NOT EXISTS idx_elementary_reports_report_key ON elementary_reports(report_key);
 CREATE INDEX IF NOT EXISTS idx_students_parent_phone ON students(parent_phone);
 
 -- RLS (Row Level Security) 활성화
 ALTER TABLE students ENABLE ROW LEVEL SECURITY;
-ALTER TABLE reports ENABLE ROW LEVEL SECURITY;
+ALTER TABLE elementary_reports ENABLE ROW LEVEL SECURITY;
 
 -- 읽기 정책 (anon 키로 조회 가능)
 CREATE POLICY "Allow public read access to students" ON students
   FOR SELECT USING (true);
 
-CREATE POLICY "Allow public read access to reports" ON reports
+CREATE POLICY "Allow public read access to elementary_reports" ON elementary_reports
   FOR SELECT USING (true);
 
 -- updated_at 자동 업데이트 트리거
@@ -92,7 +92,7 @@ CREATE TRIGGER update_students_updated_at
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();
 
-CREATE TRIGGER update_reports_updated_at
-  BEFORE UPDATE ON reports
+CREATE TRIGGER update_elementary_reports_updated_at
+  BEFORE UPDATE ON elementary_reports
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();

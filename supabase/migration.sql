@@ -63,8 +63,8 @@ BEGIN
       LIMIT 1;
     END IF;
 
-    -- 4-2. 리포트 정보 삽입
-    INSERT INTO reports (
+    -- 4-2. 초등 리포트 정보 삽입
+    INSERT INTO elementary_reports (
       student_id, report_key, test_round,
       grade_badge, core_goal,
       vocab_score, vocab_total, vocab_percent, vocab_comment, vocab_book,
@@ -123,6 +123,6 @@ SELECT
 FROM students
 UNION ALL
 SELECT
-  'reports' as table_name,
+  'elementary_reports' as table_name,
   COUNT(*) as row_count
-FROM reports;
+FROM elementary_reports;

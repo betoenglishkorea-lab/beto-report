@@ -87,9 +87,9 @@ export default function App() {
           return;
         }
 
-        // 새 테이블 구조에서 데이터 조회 (reports + students 조인)
+        // 새 테이블 구조에서 데이터 조회 (elementary_reports + students 조인)
         const { data: result, error: dbError } = await supabase
-          .from("reports")
+          .from("elementary_reports")
           .select(`
             *,
             students (*)
