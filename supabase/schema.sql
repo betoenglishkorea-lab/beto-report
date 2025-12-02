@@ -1,20 +1,9 @@
 -- ============================================
--- 베토 초등 성장 리포트 - 정규화된 테이블 스키마
+-- 베토 초등 성장 리포트 - elementary_reports 테이블 스키마
 -- ============================================
+-- 주의: students 테이블은 이미 존재하므로 생성하지 않음
 
--- 1. 학생 테이블 (기본 정보)
-CREATE TABLE IF NOT EXISTS students (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  student_name VARCHAR(100) NOT NULL,
-  school VARCHAR(200),
-  grade VARCHAR(20),
-  class_name VARCHAR(50),
-  parent_phone VARCHAR(20) NOT NULL,  -- 로그인 인증용
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
--- 2. 초등 리포트 테이블 (시험 회차별 성적)
+-- 초등 리포트 테이블 (시험 회차별 성적)
 CREATE TABLE IF NOT EXISTS elementary_reports (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   student_id UUID NOT NULL REFERENCES students(id) ON DELETE CASCADE,
@@ -65,21 +54,16 @@ CREATE TABLE IF NOT EXISTS elementary_reports (
 -- 인덱스 생성
 CREATE INDEX IF NOT EXISTS idx_elementary_reports_student_id ON elementary_reports(student_id);
 CREATE INDEX IF NOT EXISTS idx_elementary_reports_report_key ON elementary_reports(report_key);
-CREATE INDEX IF NOT EXISTS idx_students_parent_phone ON students(parent_phone);
 
 -- RLS (Row Level Security) 활성화
-ALTER TABLE students ENABLE ROW LEVEL SECURITY;
 ALTER TABLE elementary_reports ENABLE ROW LEVEL SECURITY;
 
 -- 읽기 정책 (anon 키로 조회 가능)
-CREATE POLICY "Allow public read access to students" ON students
-  FOR SELECT USING (true);
-
 CREATE POLICY "Allow public read access to elementary_reports" ON elementary_reports
   FOR SELECT USING (true);
 
 -- updated_at 자동 업데이트 트리거
-CREATE OR REPLACE FUNCTION update_updated_at_column()
+CREATE OR REPLACE FUNCTION update_elementary_reports_updated_at()
 RETURNS TRIGGER AS $$
 BEGIN
   NEW.updated_at = NOW();
@@ -87,12 +71,7 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
-CREATE TRIGGER update_students_updated_at
-  BEFORE UPDATE ON students
-  FOR EACH ROW
-  EXECUTE FUNCTION update_updated_at_column();
-
-CREATE TRIGGER update_elementary_reports_updated_at
+CREATE TRIGGER trigger_update_elementary_reports_updated_at
   BEFORE UPDATE ON elementary_reports
   FOR EACH ROW
-  EXECUTE FUNCTION update_updated_at_column();
+  EXECUTE FUNCTION update_elementary_reports_updated_at();

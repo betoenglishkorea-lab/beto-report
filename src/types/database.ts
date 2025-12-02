@@ -1,12 +1,20 @@
 // 베토 초등 성장 리포트 - 데이터베이스 타입 정의
 
+// 기존 students 테이블 구조에 맞춤
 export interface Student {
   id: string;
-  student_name: string;
-  school: string | null;
+  student_code: string | null;
+  name: string;                    // 'student_name'이 아닌 'name'
+  phone: string | null;
+  parent_phone: string | null;
+  parent_email: string | null;
+  department: string | null;       // 초등부/중등부/고등부
+  school_id: string | null;
   grade: string | null;
-  class_name: string | null;
-  parent_phone: string;
+  status: string | null;           // 예비생/재원생
+  campus_id: string | null;
+  enrolled_at: string | null;
+  withdrawn_at: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -69,12 +77,12 @@ export type ReportWithStudent = ElementaryReportWithStudent;
 
 // 화면에서 사용하는 통합 데이터 타입 (기존 JSON 구조와 호환)
 export interface ReportData {
-  // 학생 정보 (students 테이블)
-  student_name: string;
-  school: string | null;
-  grade: string | null;
-  class_name: string | null;
-  parent_phone: string;
+  // 학생 정보 (students 테이블에서 매핑)
+  student_name: string;            // students.name에서 매핑
+  school: string | null;           // schools 테이블 조인 필요 시 추가
+  grade: string | null;            // students.grade
+  class_name: string | null;       // classes 테이블 조인 필요 시 추가
+  parent_phone: string | null;     // students.parent_phone
 
   // 리포트 정보 (elementary_reports 테이블)
   test_round: string | null;

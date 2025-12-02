@@ -1,7 +1,9 @@
 -- ============================================
--- 기존 kv_store_41d28b0a 데이터를 새 테이블로 마이그레이션
+-- 기존 kv_store_41d28b0a 데이터를 elementary_reports 테이블로 마이그레이션
 -- ============================================
--- 주의: schema.sql을 먼저 실행한 후 이 스크립트를 실행하세요.
+-- 주의:
+-- 1. schema.sql을 먼저 실행한 후 이 스크립트를 실행하세요.
+-- 2. students 테이블은 이미 존재하므로, 기존 학생 데이터와 매칭합니다.
 
 -- 1. 임시 함수: JSON에서 안전하게 텍스트 추출
 CREATE OR REPLACE FUNCTION safe_text(json_val JSONB, key_name TEXT)
@@ -37,33 +39,33 @@ $$ LANGUAGE plpgsql;
 DO $$
 DECLARE
   rec RECORD;
-  new_student_id UUID;
+  found_student_id UUID;
+  kv_student_name TEXT;
+  kv_parent_phone TEXT;
 BEGIN
   -- kv_store의 각 레코드를 순회
   FOR rec IN SELECT key, value FROM kv_store_41d28b0a LOOP
 
-    -- 4-1. 학생 정보 삽입 (중복 방지를 위해 parent_phone + student_name으로 체크)
-    INSERT INTO students (student_name, school, grade, class_name, parent_phone)
-    VALUES (
-      COALESCE(safe_text(rec.value, 'student_name'), '이름없음'),
-      safe_text(rec.value, 'school'),
-      safe_text(rec.value, 'grade'),
-      safe_text(rec.value, 'class_name'),
-      COALESCE(safe_text(rec.value, 'parent_phone'), '000-0000-0000')
-    )
-    ON CONFLICT DO NOTHING
-    RETURNING id INTO new_student_id;
+    -- JSON에서 학생 정보 추출
+    kv_student_name := safe_text(rec.value, 'student_name');
+    kv_parent_phone := safe_text(rec.value, 'parent_phone');
 
-    -- 만약 이미 존재하는 학생이면 ID 조회
-    IF new_student_id IS NULL THEN
-      SELECT id INTO new_student_id
-      FROM students
-      WHERE student_name = COALESCE(safe_text(rec.value, 'student_name'), '이름없음')
-        AND parent_phone = COALESCE(safe_text(rec.value, 'parent_phone'), '000-0000-0000')
-      LIMIT 1;
+    -- 기존 students 테이블에서 학생 찾기 (name + parent_phone으로 매칭)
+    -- students 테이블의 열 이름은 'name' (not 'student_name')
+    SELECT id INTO found_student_id
+    FROM students
+    WHERE name = kv_student_name
+      AND parent_phone = kv_parent_phone
+    LIMIT 1;
+
+    -- 학생을 찾지 못한 경우 경고 출력 후 스킵
+    IF found_student_id IS NULL THEN
+      RAISE WARNING 'Student not found: name=%, parent_phone=%, key=%',
+        kv_student_name, kv_parent_phone, rec.key;
+      CONTINUE;
     END IF;
 
-    -- 4-2. 초등 리포트 정보 삽입
+    -- 초등 리포트 정보 삽입
     INSERT INTO elementary_reports (
       student_id, report_key, test_round,
       grade_badge, core_goal,
@@ -76,7 +78,7 @@ BEGIN
       strength, growth_point, teaching_plan
     )
     VALUES (
-      new_student_id,
+      found_student_id,
       rec.key,  -- 기존 key를 report_key로 사용
       safe_text(rec.value, 'test_round'),
       safe_text(rec.value, 'grade_badge'),
@@ -107,7 +109,7 @@ BEGIN
     )
     ON CONFLICT (report_key) DO NOTHING;
 
-    RAISE NOTICE 'Migrated: %', rec.key;
+    RAISE NOTICE 'Migrated: % -> student_id: %', rec.key, found_student_id;
   END LOOP;
 END $$;
 
@@ -117,11 +119,6 @@ DROP FUNCTION IF EXISTS safe_int(JSONB, TEXT);
 DROP FUNCTION IF EXISTS safe_decimal(JSONB, TEXT);
 
 -- 6. 마이그레이션 결과 확인
-SELECT
-  'students' as table_name,
-  COUNT(*) as row_count
-FROM students
-UNION ALL
 SELECT
   'elementary_reports' as table_name,
   COUNT(*) as row_count

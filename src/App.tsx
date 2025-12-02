@@ -24,11 +24,11 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 // ReportWithStudent를 화면용 ReportData로 변환하는 함수
 const transformToReportData = (result: ReportWithStudent): ReportData => {
   return {
-    // 학생 정보
-    student_name: result.students.student_name,
-    school: result.students.school,
+    // 학생 정보 (기존 students 테이블 열 이름에 맞게 매핑)
+    student_name: result.students.name,        // students.name → student_name
+    school: null,                               // students에 school 열 없음 (school_id만 있음)
     grade: result.students.grade,
-    class_name: result.students.class_name,
+    class_name: null,                           // students에 class_name 열 없음
     parent_phone: result.students.parent_phone,
 
     // 리포트 정보
