@@ -14,17 +14,63 @@ import {
   projectId,
   publicAnonKey,
 } from "./utils/supabase/info";
+import { ReportData, ReportWithStudent } from "./types/database";
 
 // 1. Supabase 클라이언트 설정
 const supabaseUrl = `https://${projectId}.supabase.co`;
 const supabaseKey = publicAnonKey;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+// ReportWithStudent를 화면용 ReportData로 변환하는 함수
+const transformToReportData = (result: ReportWithStudent): ReportData => {
+  return {
+    // 학생 정보
+    student_name: result.students.student_name,
+    school: result.students.school,
+    grade: result.students.grade,
+    class_name: result.students.class_name,
+    parent_phone: result.students.parent_phone,
+
+    // 리포트 정보
+    test_round: result.test_round,
+    grade_badge: result.grade_badge,
+    core_goal: result.core_goal,
+
+    vocab_score: result.vocab_score,
+    vocab_total: result.vocab_total,
+    vocab_percent: result.vocab_percent,
+    vocab_comment: result.vocab_comment,
+    vocab_book: result.vocab_book,
+
+    reading_comment: result.reading_comment,
+    reading_book: result.reading_book,
+    reading_task: result.reading_task,
+    reading_student: result.reading_student,
+    reading_average: result.reading_average,
+    reading_top30: result.reading_top30,
+
+    grammar_comment: result.grammar_comment,
+    grammar_book: result.grammar_book,
+    grammar_scope: result.grammar_scope,
+    grammar_student: result.grammar_student,
+    grammar_average: result.grammar_average,
+    grammar_top30: result.grammar_top30,
+
+    total_student: result.total_student,
+    total_average: result.total_average,
+    total_top30: result.total_top30,
+
+    strength: result.strength,
+    growth_point: result.growth_point,
+    teaching_plan: result.teaching_plan,
+  };
+};
+
 export default function App() {
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<ReportData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  
+
   // 로그인 상태 관리
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -41,17 +87,23 @@ export default function App() {
           return;
         }
 
+        // 새 테이블 구조에서 데이터 조회 (reports + students 조인)
         const { data: result, error: dbError } = await supabase
-          .from("kv_store_41d28b0a")
-          .select("value")
-          .eq("key", id)
+          .from("reports")
+          .select(`
+            *,
+            students (*)
+          `)
+          .eq("report_key", id)
           .single();
 
         if (dbError || !result) {
           console.error("DB Error:", dbError);
           setError("레포트를 찾을 수 없습니다.");
         } else {
-          setData(result.value);
+          // 조인 결과를 화면용 데이터로 변환
+          const reportData = transformToReportData(result as ReportWithStudent);
+          setData(reportData);
         }
       } catch (err) {
         console.error("Fetch Error:", err);
